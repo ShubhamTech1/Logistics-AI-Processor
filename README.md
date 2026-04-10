@@ -1,6 +1,10 @@
 # 🚛 Logistics AI Document Processor
 A high-performance, lightweight RAG (Retrieval-Augmented Generation) system optimized for document extraction and QA on resource-constrained hardware.
 
+## 📺 Demo Video
+Watch the system in action here: [Click here to watch the Demo Video](https://drive.google.com/file/d/1w_k1c8aZ_TdzU2m3sV-XphO6FPbiZnbl/view?usp=drive_link)
+
+
 ## 🚀 Quick Start
 ### Prerequisites
 * **Python 3.9+**
