@@ -5,7 +5,7 @@ import uvicorn, uuid, os, pdfplumber, docx, faiss, json, re
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from openai import OpenAI
-# added some comments for clarity and debugging purposes, especially around text extraction and FAISS indexing which are critical for understanding how the document is processed and queried.
+
 app = FastAPI()
 
 # --- Setup LLM (Direct Ollama API) ---
