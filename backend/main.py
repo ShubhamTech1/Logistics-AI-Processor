@@ -8,6 +8,12 @@ from openai import OpenAI
 
 app = FastAPI()
 
+a = 9
+b = 8
+print(f"Debug: a={a}, b={b}, a+b={a+b}")    
+
+
+
 # --- Setup LLM (Direct Ollama API) ---
 # We use the standard OpenAI client to save RAM by avoiding extra libraries
 client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
