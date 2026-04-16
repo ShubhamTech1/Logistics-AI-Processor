@@ -5,7 +5,7 @@ import uvicorn, uuid, os, pdfplumber, docx, faiss, json, re
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from openai import OpenAI
-
+# added some comments for clarity and debugging purposes, especially around text extraction and FAISS indexing which are critical for understanding how the document is processed and queried.
 app = FastAPI()
 
 # --- Setup LLM (Direct Ollama API) ---
@@ -34,7 +34,42 @@ def get_text(file_path):
     except Exception as e:
         print(f"Text Extraction Error: {e}")
         return ""
-
+    
+@app.post("/upload")
+async def upload(file: UploadFile = File(...)):
+    doc_id = str(uuid.uuid4())
+    temp_path = f"temp_{file.filename}"
+    
+    with open(temp_path, "wb") as f:
+        f.write(await file.read())
+    
+    # 1. Get and Print Raw Text
+    text = get_text(temp_path)
+    print("\n--- [DEBUG] FULL TEXT ---")
+    print(text[:1000])  # Printing first 1000 characters to avoid cluttering terminal
+    
+    # 2. Chunk and Print Chunks
+    chunks = [text[i:i+500] for i in range(0, len(text), 400)]
+    print(f"\n--- [DEBUG] CHUNKS (Total: {len(chunks)}) ---")
+    for i, chunk in enumerate(chunks[:3]): # Print first 3 chunks to see the overlap
+        print(f"Chunk {i}: {chunk}\n")
+    
+    # 3. Create Embeddings and Index
+    embeddings = model.encode(chunks)
+    index = faiss.IndexFlatIP(embeddings.shape[1])
+    index.add(np.array(embeddings).astype("float32"))
+    
+    # 4. Print Index Info
+    print("\n--- [DEBUG] FAISS INDEX ---")
+    print(f"Vectors stored in index: {index.ntotal}")
+    print(f"Dimensions per vector: {index.d}")
+    
+    doc_store[doc_id] = {"text": text, "chunks": chunks, "index": index}
+    
+    os.remove(temp_path)
+    return {"doc_id": doc_id}
+    
+'''
 @app.post("/upload")
 async def upload(file: UploadFile = File(...)):
     doc_id = str(uuid.uuid4())
@@ -52,7 +87,7 @@ async def upload(file: UploadFile = File(...)):
     doc_store[doc_id] = {"text": text, "chunks": chunks, "index": index}
     os.remove(temp_path)
     return {"doc_id": doc_id}
-
+'''
 @app.post("/ask")
 async def ask(req: AskRequest):
     data = doc_store.get(req.doc_id)
