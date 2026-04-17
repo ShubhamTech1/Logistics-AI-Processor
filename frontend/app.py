@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-#hi how are you
+
 st.set_page_config(page_title="Logistics AI", layout="wide")
 st.title("🚛 Logistics Document Processor")
 
