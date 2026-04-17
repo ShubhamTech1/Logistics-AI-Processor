@@ -5,7 +5,7 @@ import uvicorn, uuid, os, pdfplumber, docx, faiss, json, re
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from openai import OpenAI
-# yes
+
 app = FastAPI()
 
 # --- Setup LLM (Direct Ollama API) ---
